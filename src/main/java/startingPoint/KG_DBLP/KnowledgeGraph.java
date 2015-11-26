@@ -59,12 +59,7 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     public String query2(@RequestParam(value = "name",required = false) String name) {
     	System.out.println("Query2Test");
     	name = name.replaceAll("\\+", " ");
-    	System.out.println("Name: " + name);
-    	Map<String, Object> map = paperService.graphAlcStr(name == null ? "" : name);
-    	for (Map.Entry<String, Object> entry : map.entrySet())
-    	{
-    	    System.out.println(entry.getKey() + "/" + entry.getValue());
-    	}
+    	Map<String, Object> map = paperService.getCoAuthorgraphAlcStr(name == null ? "" : name);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -78,10 +73,8 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     
     @RequestMapping("/Query1Test")
     public String query1(@RequestParam(value = "name1",required = false) String name) {
-    	System.out.println("Query1Test");
     	name = name.replaceAll("\\+", " ");
-    	System.out.println("Name: " + name);
-    	Map<String, Object> map = paperService.graphAlcStr1(name == null ? "" : name);
+    	Map<String, Object> map = paperService.getCoAuthorCoAuthorgraphAlcStr(name == null ? "" : name);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {

@@ -21,10 +21,10 @@ public interface PaperRepository extends GraphRepository<Paper> {
     @Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) RETURN p.title as paper, collect(a.name) as cast LIMIT {limit}")
     List<Map<String, Object>> graph(@Param("limit") int limit);
 
-    @Query("MATCH (p:Author {name:{name}})-[:CO]->(c:Author) RETURN distinct c.name as paper, collect(p.name) as cast")
-    List<Map<String, Object>> graph(@Param("name") String name);
+    @Query("MATCH (p:Author {name:{name}})-[:CO]-(c:Author) RETURN distinct c.name as coAuthor, collect(p.name) as author")
+    List<Map<String, Object>> findCoAuthor(@Param("name") String name);
     
-    @Query("MATCH (a:Author {name:{name1}})-[:CO]->(Author),(Author)-[:CO]->(coAuthors) RETURN coAuthors.name as paper, collect(Author.name) as cast")
+    @Query("MATCH (a:Author {name:{name1}})-[:CO]-(Author),(Author)-[:CO]-(coAuthors) RETURN coAuthors.name as paper, collect(Author.name) as cast")
     List<Map<String, Object>> findCoAuthorCoAuthor(@Param("name1") String name);
 }
 

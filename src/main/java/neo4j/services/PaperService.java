@@ -68,6 +68,99 @@ public class PaperService {
         }
         return map("nodes", nodes, "edges", rels);
     }
+    
+    private Map<String, Object> getCoauthorCoAuthortoAlcFormat(Iterator<Map<String, Object>> coAuthor, Iterator<Map<String, Object>> result) {
+        List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
+        int i = 1;
+        int target = 0;
+        while (coAuthor.hasNext()) {
+            Map<String, Object> row = coAuthor.next();
+            nodes.add(map6("id", i, "title",row.get("coAuthor"),"label", "paper", "cluster", "1", "value", 2, "group", "paper"));
+            target = i++;
+            for (Object name : (Collection) row.get("author")) {
+                Map<String, Object> author = map5("title", 
+                		name,"label", "author", "cluster", "2", "value", 1, "group", "author");
+                int source = 0;
+                for (int j = 0; j < nodes.size(); j++) {
+                	if (nodes.get(j).get("title").equals(name)) {
+                		source = (int) nodes.get(j).get("id");
+                		break;
+                	} 
+                }
+                if (source == 0) {
+                	author.put("id", i);
+                    source = i;
+                    i++;
+                    nodes.add(author);
+                }
+
+                rels.add(map3("from", source, "to", target, "title", "PUBLISH"));
+            }
+        }
+        while (result.hasNext()) {
+            Map<String, Object> row = result.next();
+            nodes.add(map6("id", i, "title",row.get("paper"),"label", "paper", "cluster", "1", "value", 2, "group", "paper"));
+            target = i++;
+            for (Object name : (Collection) row.get("cast")) {
+                Map<String, Object> author = map5("title", 
+                		name,"label", "author", "cluster", "2", "value", 1, "group", "author");
+                int source = 0;
+                for (int j = 0; j < nodes.size(); j++) {
+                	if (nodes.get(j).get("title").equals(name)) {
+                		source = (int) nodes.get(j).get("id");
+                		break;
+                	} 
+                }
+                if (source == 0) {
+                	author.put("id", i);
+                    source = i;
+                    i++;
+                    nodes.add(author);
+                }
+
+                rels.add(map3("from", source, "to", target, "title", "PUBLISH"));
+            }
+        }
+        return map("nodes", nodes, "edges", rels);
+    }
+    
+    private Map<String, Object> getCoAuthortoAlcFormat(Iterator<Map<String, Object>> result) {
+        List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
+        int i = 1;
+        int target = 0;
+        while (result.hasNext()) {
+            Map<String, Object> row = result.next();
+            //nodes.add(map5("title", row.get("paper"),"label", "author", "cluster", "2", "value", 1, "group", "paper"));
+            nodes.add(map6("id", i, "title",row.get("coAuthor"),"label", row.get("coAuthor"), "cluster", "1", "value", 1, "group", "coAuthor"));
+            System.out.println("row.getPaper is " + row.get("paper"));
+            target = i++;
+            for (Object name : (Collection) row.get("author")) {
+            	System.out.println("row.getAuthor is " + row.get("author"));
+                Map<String, Object> author = map5("title", 
+                		name,"label", name, "cluster", "2", "value", 1, "group", "author");
+                int source = 0;
+                for (int j = 0; j < nodes.size(); j++) {
+                	if (nodes.get(j).get("title").equals(name)) {
+                		System.out.println("title is " + nodes.get(j).get("title"));
+                		System.out.println("name is " + name);
+                		source = (int) nodes.get(j).get("id");
+                		break;
+                	} 
+                }
+                if (source == 0) {
+                	author.put("id", i);
+                    source = i;
+                    i++;
+                    nodes.add(author);
+                }
+
+                rels.add(map3("from", source, "to", target, "title", "COAUTHOR"));
+            }
+        }
+        return map("nodes", nodes, "edges", rels);
+    }
 
     private Map<String, Object> map(String key1, Object value1, String key2, Object value2) {
         Map<String, Object> result = new HashMap<String,Object>(2);
@@ -121,24 +214,15 @@ public class PaperService {
         return toAlcFormat(result);
     }
     
-    public Map<String, Object> graphAlcStr(String s) {
-    	System.out.print("Service: " + s);
-        Iterator<Map<String, Object>> result = paperRepository.graph(s).iterator();
-//        while(result.hasNext()) {
-//        	Map<String, Object> map = result.next();
-//        	
-//        }
-        return toAlcFormat(result);
+    public Map<String, Object> getCoAuthorgraphAlcStr(String s) {
+        Iterator<Map<String, Object>> result = paperRepository.findCoAuthor(s).iterator();
+        return getCoAuthortoAlcFormat(result);
     }
     
-    public Map<String, Object> graphAlcStr1(String s) {
-    	System.out.print("Service: " + s);
+    public Map<String, Object> getCoAuthorCoAuthorgraphAlcStr(String s) {
+    	Iterator<Map<String, Object>> coAuthor = paperRepository.findCoAuthor(s).iterator();
         Iterator<Map<String, Object>> result = paperRepository.findCoAuthorCoAuthor(s).iterator();
-//        while(result.hasNext()) {
-//        	Map<String, Object> map = result.next();
-//        	
-//        }
-        return toAlcFormat(result);
+        return getCoauthorCoAuthortoAlcFormat(coAuthor, result);
     }
 }
 
