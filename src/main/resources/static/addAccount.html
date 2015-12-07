@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <title>Login</title>
+  <script type="text/javascript" src="javascript/jquery-2.1.4.js"></script>
+  <script type="text/javascript">
+    function signup() {
+      var params = {};
+      var param_array = window.location.href.split('?')[1].split('&');
+      for(var i in param_array){
+          x = param_array[i].split('=');
+          params[x[0]] = x[1];
+      }
+      console.log(params);
+      var test = null;
+      $.ajax({
+	  	  url: "userSignup",
+	  	  type: "GET",
+	  	  contentType: "applcation/json",
+	  	  data: params
+	  	}).done(function(data) {
+	        var data = JSON.parse(data);
+	        if (data.success == true) {
+		        alert("Sign up success! Please login");
+		        window.location.href="index.html";
+	        } else {
+		        alert("Sign up failed");
+	        }
+	  	});
+    }
+  </script>
+</head>
+<body onload="signup()">
+  <div id="test"></div>
+</body>
+</html>

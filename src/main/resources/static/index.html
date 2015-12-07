@@ -1,26 +1,32 @@
 <!DOCTYPE html>
-<html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6 ielt8"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7 ielt8"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
 <head>
-<meta charset="UTF-8">
-<title>Sprint #1</title>
+<meta charset="utf-8">
+<title>User Login</title>
+<link rel="stylesheet" type="text/css" href="css/login.css" />
 </head>
 <body>
-<form action="Q1.html" id="q1_form">
-<legend>Query 1: Get CoAuthor's CoAuthor</legend>
-  Value1:<br>
-  <input type="text" name="name1" value="name">
-  <br>
-  <input type="submit" value="Submit">
-</form> 
-  <br><br>
-  <br><br>
-
-<form action="Q2.html" id="q2_form">
-<legend>Query 2: Gets Paper By Author Name</legend>
-  Name:<br>
-  <input type="text" name="name" value="name">
-  <br><br>
-  <input type="submit" value="Submit">
-</form> 
+<div class="container">
+	<section id="content">
+		<form action="login.html">
+			<h1>Login Form</h1>
+			<div>
+				<input type="text" placeholder="Username" required="" name="username" />
+			</div>
+			<div>
+				<input type="password" placeholder="Password" required="" name="password" />
+			</div>
+			<div>
+				<input type="submit" value="Log in" />
+			</div>
+		</form>
+		<div class="button">
+			<a href="signup.html">Don't have an account? Click here to sign up</a>
+		</div><!-- button -->
+	</section><!-- content -->
+</div><!-- container -->
 </body>
 </html>

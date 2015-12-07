@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6 ielt8"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7 ielt8"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Account Signup</title>
+<link rel="stylesheet" type="text/css" href="css/login.css" />
+<script>
+function validateForm() {
+    var x = document.forms["signupForm"]["username"].value;
+    if (x == null || x == "") {
+        alert("user name is required");
+        return false;
+    }
+    var x1 = document.forms["signupForm"]["password"].value;
+    var x2 = document.forms["signupForm"]["comfirm_password"].value;
+    if (x1 == null || x1 == "" || x2 == null || x2 == "") {
+        alert("password is required");
+        return false;
+    }
+    if (x1 != x2) {
+        alert("password is not match!");
+        return false;
+    }
+}
+</script>
+</head>
+<body>
+<div class="container">
+	<section id="content">
+		<form action="addAccount.html" name="signupForm" onsubmit="return validateForm()">
+			<h1>Signup Form</h1>
+			<div>
+				<input type="text" placeholder="username" required="" name="username" />
+			</div>
+			<div>
+				<input type="password" placeholder="password" required="" name="password" />
+			</div>
+			<div>
+				<input type="confirm" placeholder="comfirm password" required="" name="comfirm_password" />
+			</div>
+			<div>
+				<input type="submit" value="Sign up" />
+			</div>
+		</form>
+	</section><!-- content -->
+</div><!-- container -->
+</body>
+</html>

@@ -21,8 +21,9 @@ public class XmlParser {
 	
 	public XmlParser() {
 		try {
+			
 			builder = factory.newDocumentBuilder();
-			String filePath = "/Users/Michelle/Documents/CMU/courses/18656WorkFlow/Homework/18656FinalProject/KG-DBLP/src/input.xml";
+			String filePath = "/Users/Michelle/Downloads/dblp.xml";
 			document = builder.parse(new File(filePath));
 		}
 		catch(Exception e) {
@@ -33,11 +34,11 @@ public class XmlParser {
 	}
 	
 	public void getXml2List() throws IOException {
-		PrintWriter writer = new PrintWriter("outputPub.csv", "UTF-8");
+		PrintWriter writer = new PrintWriter("/Users/Michelle/Downloads/outputPub.csv", "UTF-8");
 		Node articleNode;
 		for(int i=0; i<nodeList.getLength(); i++) {
 			ArrayList<String> singleArticle = new ArrayList<>();
-			for(int count=0; count<=11; count++) {
+			for(int count=0; count<=13; count++) {
 				singleArticle.add("NULL");
 			}
 			articleNode = nodeList.item(i);
@@ -77,6 +78,12 @@ public class XmlParser {
 				else if(curNode.getNodeName().equals("ee")) {
 					singleArticle.set(11, curNode.getTextContent());
 				}
+				else if(curNode.getNodeName().equals("cite")) {
+					singleArticle.set(12, curNode.getTextContent());
+				}
+				else if(curNode.getNodeName().equals("address")) {
+					singleArticle.set(13, curNode.getTextContent());
+				}
 			}
 			author.deleteCharAt(author.length()-1);
 			singleArticle.set(4,author.toString());
@@ -105,7 +112,11 @@ public class XmlParser {
 			sb.append(singleArticle.get(10));
 			sb.append("%");
 			sb.append(singleArticle.get(11));
-			//sb.append("%");
+			sb.append("%");
+			sb.append(singleArticle.get(12));
+			sb.append("%");
+			sb.append(singleArticle.get(13));
+			sb.append("%");
 			writer.println(sb.toString());
 		}
 		
