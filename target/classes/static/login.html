@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <title>Login</title>
+
+  <script type="text/javascript" src="javascript/jquery-2.1.4.js"></script>
+
+  <script type="text/javascript">
+
+    function draw() {
+      var params = {};
+      var param_array = window.location.href.split('?')[1].split('&');
+      for(var i in param_array){
+          x = param_array[i].split('=');
+          params[x[0]] = x[1];
+      }
+      console.log(params);
+      var test = null;
+      $.ajax({
+	  	  url: "userLogin",
+	  	  type: "GET",
+	  	  contentType: "applcation/json",
+	  	  data: params
+	  	}).done(function(data) {
+	        var data = JSON.parse(data);
+	        if (data.username == "null") {
+	        	alert("log in failed");
+	        	window.location.href="login.html";
+	        }
+	        else {
+	        	setCookie("username", data.username, 1);
+	        	setCookie("visited", data.visited, 1);
+	        	setCookie("followers", data.followers, 1);
+	        	setCookie("notification", data.notification, 1);
+	        	setCookie("users", data.users, 1);
+	        	window.location.href="main.html";
+	        }
+	  	});
+    }
+    
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+  </script>
+</head>
+<body onload="draw()">
+  <div id="mynetwork"></div>
+  <div id="graphText">
+    <div class="row">
+      <div class="col-lg-6" id="testGraph">
+      </div>
+      <div class="col-lg-6" id="testText">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

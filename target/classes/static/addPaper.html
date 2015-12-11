@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <title>add paper</title>
+
+  <script type="text/javascript" src="javascript/jquery-2.1.4.js"></script>
+  <link href="css/vis.css" rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+   
+    function add() {
+      var params = {};
+      var param_array = window.location.href.split('?')[1].split('&');
+      for(var i in param_array){
+          x = param_array[i].split('=');
+          params[x[0]] = x[1];
+      }
+      console.log(params);
+      var test = null;
+      $.ajax({
+	  	  url: "publishPaper",
+	  	  type: "GET",
+	  	  contentType: "applcation/json",
+	  	  data: params
+	  	}).done(function() {
+	  		window.location.href="main.html";
+	  	});
+    }
+  </script>
+  <script src="javascript/googleAnalytics.js"></script>
+</head>
+<body onload="add()">
+</body>
+</html>

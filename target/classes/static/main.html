@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="css/dark.css" />
+<link rel="stylesheet" type="text/css" href="css/green.css" />
+<script type="text/javascript" src="javascript/jquery-2.1.4.js"></script>
+
+<title>Sprint #2</title>
+
+</head>
+<body style="background-color:lightgrey">
+
+<h2 id="username"></h2>
+<div id="logout_button" onclick="logout();">Logout</div>
+
+  <div id="navi">
+	<ul id="history">
+  		<li><a class="active">Recent History</a></li>
+  		<li><a>USER1</a></li>  
+	</ul>
+  </div>
+  
+  <div id="navi_f">
+	<ul id="followers">
+  		<li><a class="active">My Followers</a></li>
+  		<li><a>Placeholder</a></li>  
+	</ul>
+  </div>
+  
+    <div id="navi_u">
+	<ul id="activeUsers">
+  		<li><a class="active">Active Users</a></li>
+  		<li><a>Placeholder</a></li>  
+	</ul>
+  </div>
+  
+  
+
+  <div id="navi_n">
+	<ul id="notification">
+  		<li><a class="active">Notification</a></li>
+  		<li><a>USER1</a></li>  
+	</ul>
+  </div>
+
+<form action="addPaper.html" id="add_paper_form" class="smart-green">
+	<h1>Add New Publication:
+        <span>Please fill the info for this publication</span>
+	</h1>
+	<label>
+        <span>Title :</span>
+  		<input type="text" name="title" placeholder="Title">
+    </label>
+    <label>
+        <span>&nbsp;</span> 
+        <input type="submit" class="button" value="Submit" /> 
+    </label>  
+</form> 
+  <br><br>
+
+  <form action="Q1.html" id="q1_form" class="dark-matter">
+	<h1>Query 1:
+        <span>Find Author's Coauthor's Coauthor</span>
+	</h1>
+    <label>
+        <span>Name :</span>
+	    <input type="text" name="name1" placeholder="value2">
+    </label>
+    <label>
+        <span>&nbsp;</span> 
+        <input type="submit" class="button" value="Submit" /> 
+    </label>  
+</form> 
+  <br><br>
+
+<form action="Q2.html" id="q2_form" class="dark-matter">
+	<h1>Query 2:
+        <span>Find Author's Coauthor</span>
+	</h1>
+	
+	<label>
+        <span>Name: :</span>
+	    <input type="text" name="name" placeholder="name">
+    </label>
+    <label>
+        <span>&nbsp;</span> 
+        <input type="submit" class="button" value="Submit" /> 
+    </label> 
+  </form> 
+  
+  <br><br>
+
+<form action="Q3.html" id="q3_form" class="dark-matter">
+	<h1>Query 3:
+        <span>Show publication within timeline with set of author</span>
+	</h1>
+	
+	<label>
+        <span>Name: :</span>
+	    <input type="text" name="name" placeholder="name">
+    </label>
+    <label>
+        <span>StartYear: :</span>
+	    <input type="number" name="startYear" placeholder="year">
+    </label>
+    <label>
+    	<span>EndYear: :</span>
+	    <input type="number" name="endYear" placeholder="year">
+    </label>
+    <label>
+        <span>&nbsp;</span> 
+        <input type="submit" class="button" value="Submit" /> 
+    </label> 
+  </form> 
+  
+  <br><br>
+  
+  <form action="Q4.html" id="q4_form" class="dark-matter">
+	<h1>Query 4:
+        <span>Given key word, list top k related publications together with author</span>
+	</h1>
+	
+	<label>
+        <span>key: :</span>
+	    <input type="text" name="key" placeholder="keyword">
+    </label>
+    <label>
+        <span>top: :</span>
+	    <input type="number" name="top" placeholder="topK">
+    </label>
+    <label>
+        <span>&nbsp;</span> 
+        <input type="submit" class="button" value="Submit" /> 
+    </label> 
+  </form> 
+  
+  <br><br>
+  
+  <form action="Q5.html" id="q5_form" class="dark-matter">
+	<h1>Query 5:
+        <span>Given journal, list all authors based on the volume</span>
+	</h1>
+	
+	<label>
+        <span>journal: :</span>
+	    <input type="text" name="journal" placeholder="journal">
+    </label>
+    <label>
+        <span>&nbsp;</span> 
+        <input type="submit" class="button" value="Submit" /> 
+    </label> 
+  </form> 
+  
+  <br><br>
+  
+  <form action="Q6.html" id="q6_form" class="dark-matter">
+	<h1>Categorize the research papers (given time period)</span>
+	</h1>
+	
+	<label>
+        <span>startYear: :</span>
+	    <input type="number" name="startYear" placeholder="startYear">
+    </label>
+    <label>
+        <span>endYear: :</span>
+	    <input type="number" name="endYear" placeholder="endYear">
+    </label>
+    <label>
+        <span>&nbsp;</span> 
+        <input type="submit" class="button" value="Submit" /> 
+    </label> 
+  </form> 
+  
+  <br><br>
+  
+  <form action="Q7.html" id="q7_form" class="dark-matter">
+	<h1>Query 7:
+        <span>Given an author, find the path that can connect to another author</span>
+	</h1>
+	
+	<label>
+        <span>author1: :</span>
+	    <input type="text" name="author1" value="Ryszard Janicki">
+    </label>
+    <label>
+        <span>author2: :</span>
+	    <input type="text" name="author2" value="Victor Khomenko">
+    </label>
+    <label>
+        <span>&nbsp;</span> 
+        <input type="submit" class="button" value="Submit" /> 
+    </label> 
+  </form> 
+
+</body>
+
+
+<script>
+	
+	function getCookie(cname) {
+	    var name = cname + "=";
+	    var ca = document.cookie.split(';');
+	    for(var i=0; i<ca.length; i++) {
+	        var c = ca[i];
+	        while (c.charAt(0)==' ') c = c.substring(1);
+	        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+	    }
+	    return "NOT FOUND";
+	}
+	
+	function follow(name) {
+	      var params = {};
+	      params['username'] = getCookie("username");
+	      params['name'] = name;
+	      console.log(params['username'] + " is gonna follow " + params['name']);
+	      $.ajax({
+		  	  url: "follow",
+		  	  type: "GET",
+		  	  contentType: "applcation/json",
+		  	  data: params
+		  	}).done(function(data) {
+		  		var data = JSON.parse(data);
+		        if (data.status == "success") {
+		        	alert("You have followed " + name);
+		        }
+		  	});
+	  }
+	    function logout() {
+	    	document.cookie = "";//clear all cookie
+	    	window.location.href="index.html";
+	    }
+	
+	function getUsers() {
+		var list = getCookie("users").split('|');
+		console.log(list);
+		var result = '<li><a class="active">All Active Users</a></li>';
+		for(var i = 0; i < list.length; i++) {
+			
+			result = result + '<li><a onclick="follow(\''+list[i]+'\');">' + list[i] + '</a><li>';//can triger the follow here
+		}
+		return result;		
+	}
+	
+	function showProfile(name) {
+	      var params = {};
+	      params['name'] = name;
+	      console.log("Getting profile for " + params['name']);
+	      $.ajax({
+		  	  url: "profile",
+		  	  type: "GET",
+		  	  contentType: "applcation/json",
+		  	  data: params
+		  	}).done(function(data) {
+		  		var data = JSON.parse(data);
+		  		var p = "User Name: " + data.name + "\n";
+				p = p + "Followers: " + data.follower + "\n";
+				p = p + "Publications: " + data.publication + "\n";
+				alert(p);
+		  	});
+	}
+	
+	function getFollowers() {
+		var list = getCookie("followers").split('|');
+		var result = '<li><a class="active">My Followers</a></li>';
+		for(var i = 0; i < list.length; i++) {
+			result = result + '<li><a onclick="showProfile(\''+list[i]+'\');">' + list[i] + '</a></li>';//can triger the follow here
+		}
+		return result;		
+	}
+	
+	function getHistory() {
+		var list = getCookie("visited").split('|');
+		var result = '<li><a class="active">Recent History</a></li>';
+		for(var i = 0; i < list.length; i++) {
+			result = result + "<li><a>" + list[i] + "</a></li>"
+		}
+		return result;		
+	}
+	
+	function getNotification() {
+		var list = getCookie("notification").split('|');
+		var result = null;
+		if(list.length > 0) {
+			var result = '<li><a class="active">Notification</a></li>';
+			for(var i = 0; i < list.length; i++) {
+				result = result + "<li><a>" + list[i] + "</a></li>"//might want to set href here to redirect
+			}
+		}
+		return result;		
+	}
+	document.getElementById("username").innerHTML = "Hello " + getCookie("username");
+    document.getElementById("history").innerHTML = getHistory();
+    var noti = getNotification();
+    if (noti.indexOf("NOT FOUND") == -1) {
+    	document.getElementById('navi_n').style.display = 'block';
+        document.getElementById("notification").innerHTML = noti;
+    }
+    var f_list = getFollowers();
+    if (noti.indexOf("NOT FOUND") == -1) {
+    	document.getElementById('navi_f').style.display = 'block';
+        document.getElementById("followers").innerHTML = f_list;
+    }
+    var u_list = getUsers();
+    document.getElementById('navi_u').style.display = 'block';
+    document.getElementById("activeUsers").innerHTML = u_list;
+        
+    document.getElementById("history").innerHTML = getHistory();
+   
+    
+</script>
+</html>
+On Dec 2, 2015, at 10:18 PM, WendyGuo <gqw1992@gmail.com> wrote:
+
+<static>
