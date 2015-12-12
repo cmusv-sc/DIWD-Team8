@@ -37,7 +37,7 @@ public class PaperService {
         return map("nodes", nodes, "links", rels);
     }
     
-    private Map<String, Object> toAlcFormat(Iterator<Map<String, Object>> result) {
+    private Map<String, Object> toAlcFormat(Iterator<Map<String, Object>> result, String relationship) {
         List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
         List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
         int i = 1;
@@ -50,7 +50,7 @@ public class PaperService {
             for (Object name : (Collection) row.get("author")) {
             	System.out.println("name is " + name);
                 Map<String, Object> author = map5("title", 
-                		name,"label", row.get("author"), "cluster", "2", "value", 1, "group", "author");
+                		name,"label", name, "cluster", "2", "value", 1, "group", "author");
                 int source = 0;
                 for (int j = 0; j < nodes.size(); j++) {
                 	if (nodes.get(j).get("title").equals(name)) {
@@ -65,7 +65,7 @@ public class PaperService {
                     nodes.add(author);
                 }
 
-                rels.add(map3("from", source, "to", target, "title", "PUBLISH"));
+                rels.add(map3("from", source, "to", target, "title", relationship));
             }
         }
         System.out.println("nodes are " + nodes);
@@ -171,10 +171,14 @@ public class PaperService {
         List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
         int i = 1;
         int target = 0;
+        String lastYear = "";
         while (result.hasNext()) {
             Map<String, Object> row = result.next();
-            nodes.add(map6("id", i, "title",row.get("year"),"label", row.get("year"), "cluster", "1", "value", 1, "group", "year"));
-            target = i++;
+            if(!lastYear.equals(row.get("year").toString()) || lastYear.equals("")) {
+            	nodes.add(map6("id", i, "title",row.get("year"),"label", row.get("year"), "cluster", "1", "value", 1, "group", "year"));
+                lastYear = row.get("year").toString();
+            	target = i++;
+            }
             Object name = row.get("pubTitle");
             Map<String, Object> author = map5("title", 
             		name,"label", name, "cluster", "2", "value", 1, "group", "pubTitle");
@@ -247,6 +251,74 @@ public class PaperService {
         }
         return map("nodes", nodes, "edges", rels);
     }
+    
+    private Map<String, Object> paperInterestedToAlcFormat(Iterator<Map<String, Object>> result) {
+        List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
+        int i = 1;
+        int target = 0;
+        while (result.hasNext()) {
+            Map<String, Object> row = result.next();
+            nodes.add(map6("id", i, "title",row.get("title"),"label", row.get("title"), "cluster", "1", "value", 1, "group", "publication"));
+        	target = i++;
+        }
+        return map("nodes", nodes, "edges", rels);
+    }
+    
+    private Map<String, Object> showCardToAlcFormat(Iterator<Map<String, Object>> result) {
+        List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
+        int i = 1;
+        int target = 0;
+        while (result.hasNext()) {
+            Map<String, Object> row = result.next();
+            nodes.add(map6("id", i, "title",row.get("author"),"label", row.get("pubTitle"), "cluster", "1", "value", 1, "group", "publication"));
+        	target = i++;
+        }
+        return map("nodes", nodes, "edges", rels);
+    }
+    
+    private Map<String, Object> showPubCardToAlcFormat(Iterator<Map<String, Object>> result) {
+        List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
+        int i = 1;
+        int target = 0;
+        while (result.hasNext()) {
+            Map<String, Object> row = result.next();
+            StringBuilder pubInfo = new StringBuilder();
+            pubInfo.append("Journal is: " + row.get("journal") + " ");
+            pubInfo.append("Volume is: " + row.get("volume") + " ");
+            pubInfo.append("Year is: " + row.get("year"));
+            nodes.add(map6("id", i, "title",pubInfo,"label", row.get("pubTitle"), "cluster", "1", "value", 1, "group", "publication"));
+        	target = i++;
+        	
+        	Map<String, Object> citation = map5("title", 
+            		row.get("citation"),"label", "citation", "cluster", "2", "value", 1, "group", "pubTitle");
+        	citation.put("id", i);
+        	int source = i;
+            i++;
+            nodes.add(citation);
+            rels.add(map3("from", source, "to", target, "title", "CITE"));
+        }
+        return map("nodes", nodes, "edges", rels);
+    }
+    
+    private Map<String, Object> authorOnGoogleMaptoAlcFormat(Iterator<Map<String, Object>> result) {
+    	Map<String, Object> map = new HashMap<>();
+    	Object[] value = new Object[10];
+    	int i=0;
+    	while(result.hasNext()) {
+    		Map<String, Object> row = result.next();
+    		if(row.get("dist") == null || Double.parseDouble(row.get("dist").toString())>500) {
+    			continue;
+    		}
+    		double[] loc = { Double.parseDouble(row.get("latitude").toString()), Double.parseDouble(row.get("longitude").toString())};
+    		value[i] = loc;
+    		i++;
+    	}
+    	map.put("loc", value);
+    	return map;
+    }
 
     private Map<String, Object> map(String key1, Object value1, String key2, Object value2) {
         Map<String, Object> result = new HashMap<String,Object>(2);
@@ -295,7 +367,7 @@ public class PaperService {
     
     public Map<String, Object> graphAlc(int limit) {
         Iterator<Map<String, Object>> result = paperRepository.graph(limit).iterator();
-        return toAlcFormat(result);
+        return toAlcFormat(result, "PUBLISH");
     }
     
     public Map<String, Object> getCoAuthorgraphAlcStr(String s) {
@@ -328,17 +400,82 @@ public class PaperService {
 //        	    System.out.println(entry.getKey() + "/" + entry.getValue());
 //        	}
 //        }
-        return toAlcFormat(result);
+        return toAlcFormat(result, "PUBLISH");
     }
     
     public Map<String, Object> catergorizePaper(int startYear, int endYear) {
         Iterator<Map<String, Object>> result = paperRepository.categorizePaper(startYear, endYear).iterator();
-        return toAlcFormat(result);
+        return toAlcFormat(result, "PUBLISH");
     }
     
     public Map<String, Object> authorConnectAuthor(String author1, String author2) {
         Iterator<Map<String, Object>> result = paperRepository.authorConnectAuthor(author1, author2).iterator();
         return authorConnectAuthortoAlcFormat(result);
+    }
+    
+    public Map<String, Object> findExpertsByKey(String key, int topK) {
+        Iterator<Map<String, Object>> result = paperRepository.findExpertsByKey(key, topK).iterator();
+        return getPubOnTimelineAndAuthortoAlcFormat(result);
+    }
+    
+    public Map<String, Object> paperInterested(String key1, String key2) {
+        Iterator<Map<String, Object>> result = paperRepository.paperInterested(key1, key2).iterator();
+        return paperInterestedToAlcFormat(result);
+    }
+    
+    public Map<String, Object> showPaperRelationshipOnKey(String key) {
+        Iterator<Map<String, Object>> result = paperRepository.showPaperRelationshipOnKey(key).iterator();
+        return toAlcFormat(result, "CITE");
+    }
+    
+    public Map<String, Object> paperToPaper(String key) {
+        Iterator<Map<String, Object>> result = paperRepository.showPaperRelationshipOnKey(key).iterator();
+        return toAlcFormat(result, "CITE");
+    }
+    
+    public Map<String, Object> showPaperToPaper() {
+        Iterator<Map<String, Object>> result = paperRepository.showPaperToPaper().iterator();
+        return toAlcFormat(result, "CITE");
+    }
+    
+    public Map<String, Object> showPersonToPerson() {
+        Iterator<Map<String, Object>> result = paperRepository.showPersonToPerson().iterator();
+        return toAlcFormat(result, "CO");
+    }
+    
+    public Map<String, Object> showPaperToPerson() {
+        Iterator<Map<String, Object>> result = paperRepository.showPaperToPerson().iterator();
+        return toAlcFormat(result, "PUBLISH");
+    }
+    
+    public Map<String, Object> catergorizePaperVersion2(int startYear, int endYear, String journal, String key) {
+        Iterator<Map<String, Object>> result = paperRepository.catergorizePaperVersion2(startYear, endYear, journal, key).iterator();
+        return toAlcFormat(result, "PUBLISH");
+    }
+    
+    public Map<String, Object> showPastPubCard() {
+        Iterator<Map<String, Object>> result = paperRepository.showPastPubCard().iterator();
+        return showCardToAlcFormat(result);
+    }
+    
+    public Map<String, Object> showPubInfoCard() {
+        Iterator<Map<String, Object>> result = paperRepository.showPubInfoCard().iterator();
+        return showPubCardToAlcFormat(result);
+    }
+    
+    public Map<String, Object> authorOfCollabrator(String key1, String key2) {
+        Iterator<Map<String, Object>> result = paperRepository.authorOfCollabrator(key1, key2).iterator();
+        return paperInterestedToAlcFormat(result);
+    }
+    
+    public Map<String, Object> authorOnGoogleMap(String key, double latitude, double longitude) {
+        Iterator<Map<String, Object>> result = paperRepository.authorOnGoogleMap(key, latitude, longitude).iterator();
+        return authorOnGoogleMaptoAlcFormat(result);
+    }
+    
+    public Map<String, Object> pubOnGoogleMap(String key, int startYear, int endYear) {
+        Iterator<Map<String, Object>> result = paperRepository.pubOnGoogleMap(key, startYear, endYear).iterator();
+        return authorOnGoogleMaptoAlcFormat(result);
     }
 }
 

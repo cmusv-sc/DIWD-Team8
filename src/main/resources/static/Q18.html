@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <title>Network | Sizing</title>
+  
+   <style type="text/css">
+div#map_container{
+	width:100%;
+	height:350px;
+}
+</style>
+  
+  <script type="text/javascript" src="javascript/jquery-2.1.4.js"></script>
+ <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+<script type="text/javascript">
+var locations = null;
+var latitude = null;
+var longitude = null;
+  function loadMap() {
+	  
+	  var params = {};
+      var param_array = window.location.href.split('?')[1].split('&');
+      for(var i in param_array){
+          x = param_array[i].split('=');
+          params[x[0]] = x[1];
+      }
+      console.log(params);
+      var test = null;
+      $.ajax({
+	  	  url: "Query18Test",
+	  	  type: "GET",
+	  	  contentType: "applcation/json",
+	  	  data: params
+	  	}).done(function(data) {
+	        var data = JSON.parse(data);
+	        locations = data.loc;
+	        latitude = data.latitude;
+	        longitude = data.longitude;
+	        var latlng = new google.maps.LatLng(latitude, longitude);
+            var myOptions = {
+              zoom: 4,
+              center: latlng,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map_container"),myOptions);
+
+            var infowindow = new google.maps.InfoWindow();
+
+            var marker, i;
+
+            for (i = 0; i < locations.length; i++) {  
+              marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+                map: map
+              });
+            }                   
+	  	});
+  }
+</script>
+</head>
+
+<body onload="loadMap()">
+<div id="map_container"></div>
+</body>
+</html>

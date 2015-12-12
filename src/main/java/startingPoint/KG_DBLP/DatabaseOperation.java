@@ -80,7 +80,8 @@ public class DatabaseOperation {
 		while(rs.next()) {
 			id = rs.getInt(1);
 		}
-		
+		System.out.println("username is " + userName);
+		System.out.println("id is " + id);
 		query = "insert ignore into " + TABLE_SearchHitory + " values (" + id + ", '" + authorName +  "')";
 		statement.executeUpdate(query);
     }
